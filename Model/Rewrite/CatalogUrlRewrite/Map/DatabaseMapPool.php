@@ -16,6 +16,7 @@ use Magento\Framework\ObjectManagerInterface;
 /**
  * Pool for database maps.
  */
+
 class DatabaseMapPool
 {
     /**
@@ -78,7 +79,7 @@ class DatabaseMapPool
     {
         $key = $instanceName . '-' . $categoryId;
         if (isset($this->dataArray[$key])) {
-            $this->dataArray[$key]->destroyTableAdapter($categoryId);
+            $this->dataArray[$key]->destroyMapTableData($categoryId);
             unset($this->dataArray[$key]);
         }
     }

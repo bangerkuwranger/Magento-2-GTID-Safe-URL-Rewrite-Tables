@@ -12,12 +12,14 @@
 namespace Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Map;
 
 use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\DB\TemporaryTableService;
+// use Magento\Framework\DB\TemporaryTableService;
 use Magento\UrlRewrite\Model\MergeDataProvider;
+use Magento\CatalogUrlRewrite\Model\Map\HashMapPool;
 
 /**
  * Map that holds data for category url rewrites entity.
  */
+
 class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
 {
     /**
@@ -62,15 +64,17 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
      */
     public function __construct(
         ResourceConnection $connection,
-        HashMapPool $hashMapPool,
-        TemporaryTableService $temporaryTableService
+        HashMapPool $hashMapPool// ,
+//         TemporaryTableService $temporaryTableService
     ) {
         $this->connection = $connection;
         $this->hashMapPool = $hashMapPool;
-        $this->temporaryTableService = $temporaryTableService;
+//         $this->temporaryTableService = $temporaryTableService;
     }
 
     /**
+     * Deprecated by design from this override class... 
+     * Throws an exception... was:
      * Generates data from categoryId and stores it into a temporary table.
      *
      * @param int $categoryId
@@ -78,9 +82,30 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
      */
     private function generateTableAdapter($categoryId)
     {
-        if (!isset($this->createdTableAdapters[$categoryId])) {
-            $this->createdTableAdapters[$categoryId] = $this->generateData($categoryId);
-        }
+//         if (!isset($this->createdTableAdapters[$categoryId])) {
+//             $this->createdTableAdapters[$categoryId] = $this->generateData($categoryId);
+//         }
+		$errorPhrase = new Phrase('Method not found. Developers have missed a dependency. Please alert dev team ASAP.');
+        throw new NotFoundException($errorPhrase);
+        return;
+
+    }
+    
+    /**
+     * Deprecated by design from this override class... 
+     * Throws an exception... was:
+     * Destroys data in the temporary table by categoryId.
+     * It also destroys the data in other maps that are dependencies used to construct the data.
+     *
+     *
+     * @param int $categoryId
+     * @return void
+     */
+    private function destroyTableAdapter($categoryId)
+    {
+        $errorPhrase = new Phrase('Method destroyTableAdapter not found. Developers have missed a dependency. Please alert dev team ASAP.');
+        throw new NotFoundException($errorPhrase);
+        return;
     }
 
     /**
@@ -131,7 +156,7 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
     /**
      * {@inheritdoc}
      */
-    public function destroyTableAdapter($categoryId)
+    public function destroyMapTableData($categoryId)
     {
         $this->hashMapPool->resetMap(DataCategoryUsedInProductsHashMap::class, $categoryId);
         $this->hashMapPool->resetMap(DataCategoryHashMap::class, $categoryId);

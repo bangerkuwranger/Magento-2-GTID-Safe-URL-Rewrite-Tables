@@ -14,10 +14,11 @@ namespace Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewri
 /**
  * Interface for a mysql data type of a map.
  *
- * Is used to get data by a unique key from a temporary table in mysql to prevent memory usage.
- * It internally holds the knowledge the creation of the actual data and it initializes itself when we call getData.
- * We should always call destroyTableAdapter when we don't need anymore the temporary tables.
+ * Is used to get data by a unique key from a mapping table in mysql to prevent memory usage.
+ * It internally store the creation of the actual data and it initializes itself when we call getData.
+ * We should always call destroyMapTableData when we don't need the mapping tables anymore.
  */
+
 interface DatabaseMapInterface
 {
     /**
@@ -40,5 +41,14 @@ interface DatabaseMapInterface
      * @param int $categoryId
      * @return void
      */
-    public function destroyTableAdapter($categoryId);
+//     public function destroyTableAdapter($categoryId);
+
+	 /**
+     * Destroys data in the mapping table by categoryId.
+     * It also destroys the data in other maps that are dependencies used to construct the data.
+     *
+     * @param int $categoryId
+     * @return void
+     */
+	public function destroyMapTableData($categoryId);
 }

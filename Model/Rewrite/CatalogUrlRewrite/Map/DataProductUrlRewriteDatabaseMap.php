@@ -11,15 +11,19 @@
  */
 namespace Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Map;
 
+use Magento\Framework\Phrase;
+use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\DB\TemporaryTableService;
 use Magento\UrlRewrite\Model\MergeDataProvider;
+use Magento\CatalogUrlRewrite\Model\Map\HashMapPool;
 
 /**
  * Map that holds data for category url rewrites entity
  */
+
 class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
 {
+    
     /**
      * Entity type for queries.
      *
@@ -32,7 +36,14 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
      *
      * @var string[]
      */
-    private $createdTableAdapters = [];
+//     private $createdTableAdapters = [];
+
+	/**
+     * Name of the map table.
+     *
+     * @var string
+     */
+     private $mapTableName = 'Gtid_SafeUrl_Rewrite_Table';
 
     /**
      * Pool for hash maps.
@@ -49,28 +60,20 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
     private $connection;
 
     /**
-     * Creates a temporary table in mysql.
-     *
-     * @var TemporaryTableService
-     */
-    private $temporaryTableService;
-
-    /**
      * @param ResourceConnection $connection
-     * @param HashMapPool $hashMapPool,
-     * @param TemporaryTableService $temporaryTableService
+     * @param HashMapPool $hashMapPool
      */
     public function __construct(
         ResourceConnection $connection,
-        HashMapPool $hashMapPool,
-        TemporaryTableService $temporaryTableService
+        HashMapPool $hashMapPool
     ) {
         $this->connection = $connection;
         $this->hashMapPool = $hashMapPool;
-        $this->temporaryTableService = $temporaryTableService;
     }
 
     /**
+     * Deprecated by design from this override class... 
+     * Throws an exception... was:
      * Generates data from categoryId and stores it into a temporary table.
      *
      * @param int $categoryId
@@ -78,9 +81,26 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
      */
     private function generateTableAdapter($categoryId)
     {
-        if (!isset($this->createdTableAdapters[$categoryId])) {
-            $this->createdTableAdapters[$categoryId] = $this->generateData($categoryId);
-        }
+        $errorPhrase = new Phrase('Method generateTableAdapter not found. Developers have missed a dependency. Please alert dev team ASAP.');
+        throw new NotFoundException($errorPhrase);
+        return;
+    }
+    
+    /**
+     * Deprecated by design from this override class... 
+     * Throws an exception... was:
+     * Destroys data in the temporary table by categoryId.
+     * It also destroys the data in other maps that are dependencies used to construct the data.
+     *
+     *
+     * @param int $categoryId
+     * @return void
+     */
+    private function destroyTableAdapter($categoryId)
+    {
+        $errorPhrase = new Phrase('Method destroyTableAdapter not found. Developers have missed a dependency. Please alert dev team ASAP.');
+        throw new NotFoundException($errorPhrase);
+        return;
     }
 
     /**
@@ -88,13 +108,14 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
      */
     public function getData($categoryId, $key)
     {
-        $this->generateTableAdapter($categoryId);
-        $urlRewritesConnection = $this->connection->getConnection();
-        $select = $urlRewritesConnection->select()
-            ->from(['e' => $this->createdTableAdapters[$categoryId]])
+//         $this->generateTableAdapter($categoryId);
+		$this->generateData($categoryId);
+        $urlRewritesGetDataConnection = $this->connection->getConnection();
+        $select = $urlRewritesGetDataConnection->select()
+            ->from(['e' => $this->connection->getTableName($this->mapTableName)])
             ->where('hash_key = ?', $key);
 
-        return $urlRewritesConnection->fetchAll($select);
+        return $urlRewritesGetDataConnection->fetchAll($select);
     }
 
     /**
@@ -106,8 +127,8 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
      */
     private function generateData($categoryId)
     {
-        $urlRewritesConnection = $this->connection->getConnection();
-        $select = $urlRewritesConnection->select()
+        $urlRewritesGenerateDataConnection = $this->connection->getConnection();
+        $select = $urlRewritesGenerateDataConnection->select()
             ->from(
                 ['e' => $this->connection->getTableName('url_rewrite')],
                 ['e.*', 'hash_key' => new \Zend_Db_Expr(
@@ -117,7 +138,7 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
             )
             ->where('entity_type = ?', $this->entityType)
             ->where(
-                $urlRewritesConnection->prepareSqlCondition(
+                $urlRewritesGenerateDataConnection->prepareSqlCondition(
                     'entity_id',
                     [
                         'in' => $this->hashMapPool->getDataMap(DataProductHashMap::class, $categoryId)
@@ -141,12 +162,10 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
     /**
      * {@inheritdoc}
      */
-    public function destroyTableAdapter($categoryId)
+    public function destroyMapTableData($categoryId)
     {
         $this->hashMapPool->resetMap(DataProductHashMap::class, $categoryId);
-        if (isset($this->createdTableAdapters[$categoryId])) {
-            $this->temporaryTableService->dropTable($this->createdTableAdapters[$categoryId]);
-            unset($this->createdTableAdapters[$categoryId]);
-        }
+        $urlRewritesDestroyMapTableDataConnection = $this->connection->getConnection();
+		$urlRewritesDestroyMapTableDataConnection->query('TRUNCATE TABLE ' . $this->connection->getTableName( $this->mapTableName ) );
     }
 }
