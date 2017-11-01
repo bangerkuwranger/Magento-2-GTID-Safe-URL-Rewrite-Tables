@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Copyright © 2017 Chad A. Carino. All rights reserved.
+ * See LICENSE file for license details.
+ *
+ * @package    Bangerkuwranger/GtidSafeUrlRewriteTables
+ * @author     Chad A. Carino <artist@chadacarino.com>
+ * @author     Burak Bingollu <burak.bingollu@gmail.com>
+ * @copyright  2017 Chad A. Carino
+ * @license    https://opensource.org/licenses/MIT  MIT License
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\CatalogUrlRewrite\Model\Map\DatabaseMapInterface" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Model\Map\DatabaseMapInterface" />
+    <preference for="Magento\CatalogUrlRewrite\Model\Map\DatabaseMapPool" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Model\Map\DatabaseMapPool" />
+    <preference for="Magento\CatalogUrlRewrite\Model\Map\DataCategoryUrlRewriteDatabaseMap" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Model\Map\DataCategoryUrlRewriteDatabaseMap" />
+    <preference for="Magento\CatalogUrlRewrite\Model\Map\DataProductUrlRewriteDatabaseMap" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Model\Map\DataProductUrlRewriteDatabaseMap" />
+</config>
