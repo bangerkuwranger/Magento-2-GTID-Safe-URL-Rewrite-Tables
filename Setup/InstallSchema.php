@@ -22,8 +22,15 @@ class InstallSchema implements InstallSchemaInterface
                 \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
                 null,
                 ['identity' => true, 'unsigned' => true, 'nullable' => false, 'primary' => true],
-                'ID?'
+                'URL Rewrite ID'
             )
+            
+            
+   ///    DOWN BELOW->     ********TABLE DESC TO BE DETERMINED LATER********
+            
+            
+            
+            
             ->addColumn(
                 '',
                 \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
@@ -31,7 +38,9 @@ class InstallSchema implements InstallSchemaInterface
                 ['unsigned' => true],
                 ''
             )
-********TABLE DESC TO BE DETERMINED LATER********
+
+            
+            
             ->addIndex(
                 $installer->getIdxName('sundial_m2_gtid', ['url_rewrite_id']),
                 ['url_rewrite_id']
