@@ -28,13 +28,13 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
      * @var string
      */
     private $entityType = 'category';
-
+    
     /**
-     * Names of the temporary tables.
+     * Name of the map table.
      *
-     * @var string[]
+     * @var string
      */
-    private $createdTableAdapters = [];
+     private $mapTableName = 'Gtid_SafeUrl_Rewrite_Table';
 
     /**
      * Pool for hash maps.
@@ -49,13 +49,6 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
      * @var ResourceConnection
      */
     private $connection;
-
-    /**
-     * Creates a temporary table in mysql.
-     *
-     * @var TemporaryTableService
-     */
-    private $temporaryTableService;
 
     /**
      * @param ResourceConnection $connection
@@ -109,16 +102,16 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
     }
 
     /**
-     * Queries the database for all category url rewrites that are affected by the category identified by $categoryId.
-     * It returns the name of the temporary table where the resulting data is stored.
+     * Queries the database for all category url rewrites that are affected by the category identified by $categoryId and saves it to the table.
+     * (this should probably use transactions for concurrent edits to products or cats by many users...)
      *
      * @param int $categoryId
-     * @return string
+     * @return void
      */
     private function generateData($categoryId)
     {
-        $urlRewritesConnection = $this->connection->getConnection();
-        $select = $urlRewritesConnection->select()
+        $urlRewritesGenerateDataConnection = $this->connection->getConnection();
+        $select = $urlRewritesGenerateDataConnection->select()
             ->from(
                 ['e' => $this->connection->getTableName('url_rewrite')],
                 ['e.*', 'hash_key' => new \Zend_Db_Expr(
@@ -128,7 +121,7 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
             )
             ->where('entity_type = ?', $this->entityType)
             ->where(
-                $urlRewritesConnection->prepareSqlCondition(
+                $urlRewritesGenerateDataConnection->prepareSqlCondition(
                     'entity_id',
                     [
                         'in' => array_merge(
@@ -140,17 +133,20 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
                     ]
                 )
             );
-        $mapName = $this->temporaryTableService->createFromSelect(
-            $select,
-            $this->connection->getConnection(),
-            [
-                'PRIMARY' => ['url_rewrite_id'],
-                'HASHKEY_ENTITY_STORE' => ['hash_key'],
-                'ENTITY_STORE' => ['entity_id', 'store_id']
-            ]
-        );
+//         $mapName = $this->temporaryTableService->createFromSelect(
+//             $select,
+//             $this->connection->getConnection(),
+//             [
+//                 'PRIMARY' => ['url_rewrite_id'],
+//                 'HASHKEY_ENTITY_STORE' => ['hash_key'],
+//                 'ENTITY_STORE' => ['entity_id', 'store_id']
+//             ]
+//         );
+// 
+//         return $mapName;
+		$urlRewritesGenerateDataConnection->insert( $this->connection->getTableName( $this->mapTableName ), $select->getBind() );
+		return;
 
-        return $mapName;
     }
 
     /**
@@ -160,10 +156,11 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
     {
         $this->hashMapPool->resetMap(DataCategoryUsedInProductsHashMap::class, $categoryId);
         $this->hashMapPool->resetMap(DataCategoryHashMap::class, $categoryId);
-        if (isset($this->createdTableAdapters[$categoryId])) {
-            $this->temporaryTableService->dropTable($this->createdTableAdapters[$categoryId]);
-            unset($this->createdTableAdapters[$categoryId]);
-        }
+//         if (isset($this->createdTableAdapters[$categoryId])) {
+//             $this->temporaryTableService->dropTable($this->createdTableAdapters[$categoryId]);
+//             unset($this->createdTableAdapters[$categoryId]);
+//         }
+		
     }
 
     /**
@@ -175,13 +172,14 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
      */
     public function getData($categoryId, $key)
     {
-        $this->generateTableAdapter($categoryId);
-        $urlRewritesConnection = $this->connection->getConnection();
-        $select = $urlRewritesConnection->select()->from(['e' => $this->createdTableAdapters[$categoryId]]);
+//         $this->generateTableAdapter($categoryId);
+		$this->generateData($categoryId);
+        $urlRewritesGetDataConnection = $this->connection->getConnection();
+        $select = $urlRewritesGetDataConnection->select()->from(['e' => getTableName($this->mapTableName)]);
         if (strlen($key) > 0) {
             $select->where('hash_key = ?', $key);
         }
 
-        return $urlRewritesConnection->fetchAll($select);
+        return $urlRewritesGetDataConnection->fetchAll($select);
     }
 }

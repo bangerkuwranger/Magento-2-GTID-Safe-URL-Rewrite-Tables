@@ -119,7 +119,7 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
     }
 
     /**
-     * Queries the database for all category url rewrites that are affected by the category identified by $categoryId.
+     * Queries the database for all category url rewrites that are affected by the category identified by $categoryId and saves it to the table.
      * (this should probably use transactions for concurrent edits to products or cats by many users...)
      *
      * @param int $categoryId
@@ -157,7 +157,7 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
 //             ]
 //         );
 			
-			$urlRewritesDestroyMapTableDataConnection->insert( $this->connection->getTableName( $this->mapTableName ), $select->getBind() );
+			$urlRewritesGenerateDataConnection->insert( $this->connection->getTableName( $this->mapTableName ), $select->getBind() );
 			
 //         return $mapName;
 			return;
