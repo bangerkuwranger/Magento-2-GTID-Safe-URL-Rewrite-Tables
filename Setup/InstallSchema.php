@@ -25,7 +25,7 @@ class InstallSchema implements InstallSchemaInterface
         $installer->startSetup();
 
         $table = $installer->getConnection()
-            ->newTable($installer->getTable('sundial_m2_gtid'))
+            ->newTable($installer->getTable('Gtid_SafeUrl_Rewrite_Table'))
             ->addColumn(
                 'url_rewrite_id',
                 \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
@@ -40,7 +40,27 @@ class InstallSchema implements InstallSchemaInterface
                 ['identity' => true, 'nullable' => false],
                 'URL Rewrite'
             )
-
+            ->addColumn(
+                'hash_key',
+                \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                null,
+                ['identity' => true, 'nullable' => false],
+                'Hash Key'
+            )
+            ->addColumn(
+                'entity_id',
+                \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+                null,
+                ['identity' => true, 'nullable' => false],
+                'Entity ID'
+            )
+            ->addColumn(
+                'store_id',
+                \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+                null,
+                ['identity' => true, 'nullable' => false],
+                'Store ID'
+            )
             
    ///    DOWN BELOW->     ********TABLE DESC TO BE DETERMINED LATER********
             
@@ -57,11 +77,11 @@ class InstallSchema implements InstallSchemaInterface
             
             
             ->addIndex(
-                $installer->getIdxName('sundial_m2_gtid', ['url_rewrite_id']),
+                $installer->getIdxName('Gtid_SafeUrl_Rewrite_Table', ['url_rewrite_id']),
                 ['url_rewrite_id']
             )
           
-            ->setComment('Sundial M2 GTID');
+            ->setComment('Gtid SafeUrl Rewrite Table');
         $installer->getConnection()->createTable($table);
 
         $installer->endSetup();
