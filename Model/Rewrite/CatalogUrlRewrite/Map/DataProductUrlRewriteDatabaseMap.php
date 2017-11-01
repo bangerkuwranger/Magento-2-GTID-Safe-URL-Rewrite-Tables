@@ -16,6 +16,7 @@ use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\App\ResourceConnection;
 use Magento\UrlRewrite\Model\MergeDataProvider;
 use Magento\CatalogUrlRewrite\Model\Map\HashMapPool;
+use Magento\Framework\DB\Adapter\AdapterInterface;
 
 /**
  * Map that holds data for category url rewrites entity
@@ -114,16 +115,15 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
         $select = $urlRewritesGetDataConnection->select()
             ->from(['e' => $this->connection->getTableName($this->mapTableName)])
             ->where('hash_key = ?', $key);
-
         return $urlRewritesGetDataConnection->fetchAll($select);
     }
 
     /**
      * Queries the database for all category url rewrites that are affected by the category identified by $categoryId.
-     * It returns the name of the temporary table where the resulting data is stored.
+     * (this should probably use transactions for concurrent edits to products or cats by many users...)
      *
      * @param int $categoryId
-     * @return string
+     * @return void
      */
     private function generateData($categoryId)
     {
@@ -146,17 +146,21 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
                     ]
                 )
             );
-        $mapName = $this->temporaryTableService->createFromSelect(
-            $select,
-            $this->connection->getConnection(),
-            [
-                'PRIMARY' => ['url_rewrite_id'],
-                'HASHKEY_ENTITY_STORE' => ['hash_key'],
-                'ENTITY_STORE' => ['entity_id', 'store_id']
-            ]
-        );
-
-        return $mapName;
+            
+        // $mapName = $this->temporaryTableService->createFromSelect(
+//             $select,
+//             $this->connection->getConnection(),
+//             [
+//                 'PRIMARY' => ['url_rewrite_id'],
+//                 'HASHKEY_ENTITY_STORE' => ['hash_key'],
+//                 'ENTITY_STORE' => ['entity_id', 'store_id']
+//             ]
+//         );
+			
+			$urlRewritesDestroyMapTableDataConnection->insert( $this->connection->getTableName( $this->mapTableName ), $select->getBind() );
+			
+//         return $mapName;
+			return;
     }
 
     /**
@@ -166,6 +170,6 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
     {
         $this->hashMapPool->resetMap(DataProductHashMap::class, $categoryId);
         $urlRewritesDestroyMapTableDataConnection = $this->connection->getConnection();
-		$urlRewritesDestroyMapTableDataConnection->query('TRUNCATE TABLE ' . $this->connection->getTableName( $this->mapTableName ) );
+		$urlRewritesDestroyMapTableDataConnection->query('TRUNCATE TABLE `' . $this->connection->getTableName( $this->mapTableName ) . '`' );
     }
 }
