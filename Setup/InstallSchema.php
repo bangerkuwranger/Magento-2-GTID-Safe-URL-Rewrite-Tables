@@ -24,13 +24,19 @@ class InstallSchema implements InstallSchemaInterface
                 ['identity' => true, 'unsigned' => true, 'nullable' => false, 'primary' => true],
                 'URL Rewrite ID'
             )
-            
+            ->addColumn(
+                'url_rewrite',
+                \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                null,
+                ['identity' => true, 'nullable' => false],
+                'URL Rewrite'
+            )
+
             
    ///    DOWN BELOW->     ********TABLE DESC TO BE DETERMINED LATER********
             
             
-            
-            
+
             ->addColumn(
                 '',
                 \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
