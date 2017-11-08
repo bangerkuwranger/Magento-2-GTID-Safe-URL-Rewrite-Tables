@@ -109,9 +109,29 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
      */
     public function getData($categoryId, $key)
     {
-//         $this->generateTableAdapter($categoryId);
-		$this->generateData($categoryId);
-        $urlRewritesGetDataConnection = $this->connection->getConnection();
+//      $this->generateTableAdapter($categoryId);
+// 		$this->generateData($categoryId);
+		$urlRewritesGetDataConnection = $this->connection->getConnection();
+        $select = $urlRewritesGetDataConnection->select()
+            ->from(
+                ['e' => $this->connection->getTableName('url_rewrite')],
+                ['e.*', 'hash_key' => new \Zend_Db_Expr(
+                    "CONCAT(e.store_id,'" . MergeDataProvider::SEPARATOR . "', e.entity_id)"
+                )
+                ]
+            )
+            ->where('entity_type = ?', $this->entityType)
+            ->where(
+                $urlRewritesGetDataConnection->prepareSqlCondition(
+                    'entity_id',
+                    [
+                        'in' => $this->hashMapPool->getDataMap(DataProductHashMap::class, $categoryId)
+                            ->getAllData($categoryId)
+                    ]
+                )
+            );
+		$urlRewritesGetDataConnection->insert( $this->connection->getTableName( $this->mapTableName ), $select->getBind() );
+//         $urlRewritesGetDataConnection = $this->connection->getConnection();
         $select = $urlRewritesGetDataConnection->select()
             ->from(['e' => $this->connection->getTableName($this->mapTableName)])
             ->where('hash_key = ?', $key);
