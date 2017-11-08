@@ -44,21 +44,21 @@ class InstallSchema implements InstallSchemaInterface
                 'hash_key',
                 \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                 null,
-                ['identity' => true, 'nullable' => false],
+                ['identity' => false, 'nullable' => false],
                 'Hash Key'
             )
             ->addColumn(
                 'entity_id',
                 \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
                 null,
-                ['identity' => true, 'nullable' => false],
+                ['identity' => false, 'nullable' => false],
                 'Entity ID'
             )
             ->addColumn(
                 'store_id',
                 \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
                 null,
-                ['identity' => true, 'nullable' => false],
+                ['identity' => false, 'nullable' => false],
                 'Store ID'
             )
             
