@@ -37,7 +37,7 @@ class InstallSchema implements InstallSchemaInterface
                 'url_rewrite',
                 \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                 null,
-                ['identity' => true, 'nullable' => false],
+                ['identity' => false, 'nullable' => false],
                 'URL Rewrite'
             )
             ->addColumn(
