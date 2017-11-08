@@ -66,13 +66,13 @@ class InstallSchema implements InstallSchemaInterface
             
             
 
-            ->addColumn(
-                '',
-                \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
-                null,
-                ['unsigned' => true],
-                ''
-            )
+//             ->addColumn(
+//                 '',
+//                 \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+//                 null,
+//                 ['unsigned' => true],
+//                 ''
+//             )
 
             
             
