@@ -12,10 +12,10 @@
  */
  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Magento\CatalogUrlRewrite\Model\Map\DatabaseMapInterface" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Model\Map\DatabaseMapInterface" />
-    <preference for="Magento\CatalogUrlRewrite\Model\Map\DatabaseMapPool" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Model\Map\DatabaseMapPool" />
-    <preference for="Magento\CatalogUrlRewrite\Model\Map\DataCategoryUrlRewriteDatabaseMap" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Model\Map\DataCategoryUrlRewriteDatabaseMap" />
-    <preference for="Magento\CatalogUrlRewrite\Model\Map\DataProductUrlRewriteDatabaseMap" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Model\Map\DataProductUrlRewriteDatabaseMap" />
-    <preference for="Magento\CatalogUrlRewrite\Model\Map\UrlRewriteFinder" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Model\Map\UrlRewriteFinder" />
+    <preference for="Magento\CatalogUrlRewrite\Model\Map\DatabaseMapInterface" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Map\DatabaseMapInterface" />
+    <preference for="Magento\CatalogUrlRewrite\Model\Map\DatabaseMapPool" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Map\DatabaseMapPool" />
+    <preference for="Magento\CatalogUrlRewrite\Model\Map\DataCategoryUrlRewriteDatabaseMap" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Map\DataCategoryUrlRewriteDatabaseMap" />
+    <preference for="Magento\CatalogUrlRewrite\Model\Map\DataProductUrlRewriteDatabaseMap" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Map\DataProductUrlRewriteDatabaseMap" />
+    <preference for="Magento\CatalogUrlRewrite\Model\Map\UrlRewriteFinder" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Map\UrlRewriteFinder" />
     <preference for="Magento\CatalogUrlRewrite\Observer\CategoryProcessUrlRewriteSavingObserver" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Observer\CategoryProcessUrlRewriteSavingObserver" />
 </config>
