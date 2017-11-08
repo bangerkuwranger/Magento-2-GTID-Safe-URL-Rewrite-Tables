@@ -10,7 +10,7 @@
  * @license    https://opensource.org/licenses/MIT  MIT License
  */
 
-namespace Bangerkuwranger\GtidSafeUrlRewriteTables\CatalogUrlRewrite\Observer;
+namespace Bangerkuwranger\GtidSafeUrlRewriteTables\Observer;
 
 use Magento\Catalog\Model\Category;
 use Magento\CatalogUrlRewrite\Model\CategoryUrlRewriteGenerator;
