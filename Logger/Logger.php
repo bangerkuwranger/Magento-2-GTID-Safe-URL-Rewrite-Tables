@@ -9,7 +9,7 @@
  * @copyright  2017 Chad A. Carino
  * @license    https://opensource.org/licenses/MIT  MIT License
  */
-namespace Bangerkuwranger\GtidSafeUrlRewriteTables\Logger
+namespace Bangerkuwranger\GtidSafeUrlRewriteTables\Logger;
 
 class Logger extends \Monolog\Logger
 {
