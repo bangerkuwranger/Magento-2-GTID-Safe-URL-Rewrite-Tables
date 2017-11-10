@@ -26,7 +26,7 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
      * Logging instance
      * @var \Bangerkuwranger\GtidSafeUrlRewriteTables\Logger\Logger
      */
-    protected $_logger;
+    protected $_bklogger;
     
     /**
      * Entity type for queries.
@@ -69,7 +69,7 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
     ) {
         $this->connection = $connection;
         $this->hashMapPool = $hashMapPool;
-        $this->_logger = $logger;
+        $this->_bklogger = $logger;
 //         $this->temporaryTableService = $temporaryTableService;
     }
 
@@ -153,7 +153,7 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
 // 
 //         return $mapName;
 		$tempRewriteBinding = $select->getBind();
-		$this->_logger->info('binding: ' . $tempRewriteBinding);
+		$this->_bklogger->prettyLog('binding: ' . $tempRewriteBinding);
 		$urlRewritesGenerateDataConnection->insert( $this->connection->getTableName( $this->mapTableName ), $tempRewriteBinding );
 		return;
 
