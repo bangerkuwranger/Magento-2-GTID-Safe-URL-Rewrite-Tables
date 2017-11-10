@@ -23,6 +23,12 @@ use Magento\CatalogUrlRewrite\Model\Map\HashMapPool;
 class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
 {
     /**
+     * Logging instance
+     * @var \Bangerkuwranger\GtidSafeUrlRewriteTables\Logger\Logger
+     */
+    protected $_logger;
+    
+    /**
      * Entity type for queries.
      *
      * @var string
@@ -53,15 +59,17 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
     /**
      * @param ResourceConnection $connection
      * @param HashMapPool $hashMapPool,
-     * @param TemporaryTableService $temporaryTableService
+     * @param \Bangerkuwranger\GtidSafeUrlRewriteTables\Logger\Logger $logger
      */
     public function __construct(
         ResourceConnection $connection,
-        HashMapPool $hashMapPool// ,
+        HashMapPool $hashMapPool,
+        \Bangerkuwranger\GtidSafeUrlRewriteTables\Logger\Logger $logger
 //         TemporaryTableService $temporaryTableService
     ) {
         $this->connection = $connection;
         $this->hashMapPool = $hashMapPool;
+        $this->_logger = $logger;
 //         $this->temporaryTableService = $temporaryTableService;
     }
 
@@ -144,7 +152,9 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
 //         );
 // 
 //         return $mapName;
-		$urlRewritesGenerateDataConnection->insert( $this->connection->getTableName( $this->mapTableName ), $select->getBind() );
+		$tempRewriteBinding = $select->getBind();
+		$this->_logger->info('binding: ' . $tempRewriteBinding);
+		$urlRewritesGenerateDataConnection->insert( $this->connection->getTableName( $this->mapTableName ), $tempRewriteBinding );
 		return;
 
     }
