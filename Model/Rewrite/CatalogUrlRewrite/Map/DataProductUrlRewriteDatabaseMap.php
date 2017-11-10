@@ -24,6 +24,11 @@ use Magento\Framework\DB\Adapter\AdapterInterface;
 
 class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
 {
+    /**
+     * Logging instance
+     * @var \Bangerkuwranger\GtidSafeUrlRewriteTables\Logger\Logger
+     */
+    protected $_logger;
     
     /**
      * Entity type for queries.
@@ -63,13 +68,16 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
     /**
      * @param ResourceConnection $connection
      * @param HashMapPool $hashMapPool
+     * @param \Bangerkuwranger\GtidSafeUrlRewriteTables\Logger\Logger $logger
      */
     public function __construct(
         ResourceConnection $connection,
-        HashMapPool $hashMapPool
+        HashMapPool $hashMapPool,
+        \Bangerkuwranger\GtidSafeUrlRewriteTables\Logger\Logger $logger
     ) {
         $this->connection = $connection;
         $this->hashMapPool = $hashMapPool;
+        $this->_logger = $logger;
     }
 
     /**
@@ -176,8 +184,9 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
 //                 'ENTITY_STORE' => ['entity_id', 'store_id']
 //             ]
 //         );
-			
-			$urlRewritesGenerateDataConnection->insert( $this->connection->getTableName( $this->mapTableName ), $select->getBind() );
+			$tempRewriteBinding = $select->getBind();
+			$this->_logger->info('binding: ' . $tempRewriteBinding);
+			$urlRewritesGenerateDataConnection->insert( $this->connection->getTableName( $this->mapTableName ), $tempRewriteBinding );
 			
 //         return $mapName;
 			return;

@@ -12,6 +12,19 @@
  */
  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<type name="Bangerkuwranger\GtidSafeUrlRewriteTables\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Bangerkuwranger\GtidSafeUrlRewriteTables\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">GTIDSafeRewritesLogger</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Bangerkuwranger\GtidSafeUrlRewriteTables\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
     <preference for="Magento\CatalogUrlRewrite\Model\Map\DatabaseMapInterface" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Map\DatabaseMapInterface" />
     <preference for="Magento\CatalogUrlRewrite\Model\Map\DatabaseMapPool" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Map\DatabaseMapPool" />
     <preference for="Magento\CatalogUrlRewrite\Model\Map\DataCategoryUrlRewriteDatabaseMap" type="Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Map\DataCategoryUrlRewriteDatabaseMap" />
