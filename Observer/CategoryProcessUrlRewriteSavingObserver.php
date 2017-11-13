@@ -120,6 +120,5 @@ class CategoryProcessUrlRewriteSavingObserver extends \Magento\CatalogUrlRewrite
         foreach ($this->dataUrlRewriteClassNames as $className) {
             $this->databaseMapPool->resetMap($className, $category->getEntityId());
         }
-
     }
 }

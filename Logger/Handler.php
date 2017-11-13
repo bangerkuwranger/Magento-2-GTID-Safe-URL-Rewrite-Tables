@@ -19,11 +19,11 @@ class Handler extends \Magento\Framework\Logger\Handler\Base
      * Logging level
      * @var int
      */
-    protected $loggerType = Logger::INFO;
+    public $loggerType = Logger::INFO;
 
     /**
      * File name
      * @var string
      */
-    protected $fileName = '/var/log/GTIDSafeRewrites.log';
+    public $fileName = '/var/log/GTIDSafeRewrites.log';
 }

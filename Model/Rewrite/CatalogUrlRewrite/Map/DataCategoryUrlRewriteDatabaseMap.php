@@ -12,7 +12,8 @@
 namespace Bangerkuwranger\GtidSafeUrlRewriteTables\Model\Rewrite\CatalogUrlRewrite\Map;
 
 use Magento\Framework\App\ResourceConnection;
-// use Magento\Framework\DB\TemporaryTableService;
+use Magento\Framework\Phrase;
+use Magento\Framework\Exception\NotFoundException;
 use Magento\UrlRewrite\Model\MergeDataProvider;
 use Magento\CatalogUrlRewrite\Model\Map\HashMapPool;
 
@@ -26,7 +27,7 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
      * Logging instance
      * @var \Bangerkuwranger\GtidSafeUrlRewriteTables\Logger\Logger
      */
-    protected $_bklogger;
+    public $bklogger;
     
     /**
      * Entity type for queries.
@@ -40,7 +41,7 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
      *
      * @var string
      */
-     private $mapTableName = 'Gtid_SafeUrl_Rewrite_Table';
+    private $mapTableName = 'Gtid_SafeUrl_Rewrite_Table';
 
     /**
      * Pool for hash maps.
@@ -65,16 +66,14 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
         ResourceConnection $connection,
         HashMapPool $hashMapPool,
         \Bangerkuwranger\GtidSafeUrlRewriteTables\Logger\Logger $logger
-//         TemporaryTableService $temporaryTableService
     ) {
         $this->connection = $connection;
         $this->hashMapPool = $hashMapPool;
-        $this->_bklogger = $logger;
-//         $this->temporaryTableService = $temporaryTableService;
+        $this->bklogger = $logger;
     }
 
     /**
-     * Deprecated by design from this override class... 
+     * Deprecated by design from this override class...
      * Throws an exception... was:
      * Generates data from categoryId and stores it into a temporary table.
      *
@@ -83,17 +82,13 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
      */
     private function generateTableAdapter($categoryId)
     {
-//         if (!isset($this->createdTableAdapters[$categoryId])) {
-//             $this->createdTableAdapters[$categoryId] = $this->generateData($categoryId);
-//         }
-		$errorPhrase = new Phrase('Method not found. Developers have missed a dependency. Please alert dev team ASAP.');
+        $errorPhrase = new Phrase('Method not found. Developers have missed a dependency. Please alert dev team ASAP.');
+        $this->bklogger->prettyLog($errorPhrase);
         throw new NotFoundException($errorPhrase);
-        return;
-
     }
     
     /**
-     * Deprecated by design from this override class... 
+     * Deprecated by design from this override class...
      * Throws an exception... was:
      * Destroys data in the temporary table by categoryId.
      * It also destroys the data in other maps that are dependencies used to construct the data.
@@ -105,8 +100,8 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
     private function destroyTableAdapter($categoryId)
     {
         $errorPhrase = new Phrase('Method destroyTableAdapter not found. Developers have missed a dependency. Please alert dev team ASAP.');
+        $this->bklogger->prettyLog($errorPhrase);
         throw new NotFoundException($errorPhrase);
-        return;
     }
 
     /**
@@ -141,22 +136,10 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
                     ]
                 )
             );
-//         $mapName = $this->temporaryTableService->createFromSelect(
-//             $select,
-//             $this->connection->getConnection(),
-//             [
-//                 'PRIMARY' => ['url_rewrite_id'],
-//                 'HASHKEY_ENTITY_STORE' => ['hash_key'],
-//                 'ENTITY_STORE' => ['entity_id', 'store_id']
-//             ]
-//         );
-// 
-//         return $mapName;
-		$tempRewriteBinding = $select->getBind();
-		$this->_bklogger->prettyLog('binding: ' . $tempRewriteBinding);
-		$urlRewritesGenerateDataConnection->insert( $this->connection->getTableName( $this->mapTableName ), $tempRewriteBinding );
-		return;
-
+        $tempRewriteBinding = $select->getBind();
+        $this->bklogger->prettyLog('binding: ' . $tempRewriteBinding);
+        $urlRewritesGenerateDataConnection->insert($this->connection->getTableName($this->mapTableName), $tempRewriteBinding);
+        return;
     }
 
     /**
@@ -166,11 +149,6 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
     {
         $this->hashMapPool->resetMap(DataCategoryUsedInProductsHashMap::class, $categoryId);
         $this->hashMapPool->resetMap(DataCategoryHashMap::class, $categoryId);
-//         if (isset($this->createdTableAdapters[$categoryId])) {
-//             $this->temporaryTableService->dropTable($this->createdTableAdapters[$categoryId]);
-//             unset($this->createdTableAdapters[$categoryId]);
-//         }
-		
     }
 
     /**
@@ -182,11 +160,10 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
      */
     public function getData($categoryId, $key)
     {
-//         $this->generateTableAdapter($categoryId);
-		$this->generateData($categoryId);
+        $this->generateData($categoryId);
         $urlRewritesGetDataConnection = $this->connection->getConnection();
         $select = $urlRewritesGetDataConnection->select()->from(['e' => getTableName($this->mapTableName)]);
-        if (strlen($key) > 0) {
+        if ($key !== "") {
             $select->where('hash_key = ?', $key);
         }
 

@@ -28,7 +28,7 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
      * Logging instance
      * @var \Bangerkuwranger\GtidSafeUrlRewriteTables\Logger\Logger
      */
-    protected $_bklogger;
+    public $bklogger;
     
     /**
      * Entity type for queries.
@@ -38,18 +38,11 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
     private $entityType = 'product';
 
     /**
-     * Names of the temporary tables.
-     *
-     * @var string[]
-     */
-//     private $createdTableAdapters = [];
-
-	/**
      * Name of the map table.
      *
      * @var string
      */
-     private $mapTableName = 'Gtid_SafeUrl_Rewrite_Table';
+    private $mapTableName = 'Gtid_SafeUrl_Rewrite_Table';
 
     /**
      * Pool for hash maps.
@@ -77,11 +70,11 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
     ) {
         $this->connection = $connection;
         $this->hashMapPool = $hashMapPool;
-        $this->_bklogger = $logger;
+        $this->bklogger = $logger;
     }
 
     /**
-     * Deprecated by design from this override class... 
+     * Deprecated by design from this override class...
      * Throws an exception... was:
      * Generates data from categoryId and stores it into a temporary table.
      *
@@ -91,12 +84,12 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
     private function generateTableAdapter($categoryId)
     {
         $errorPhrase = new Phrase('Method generateTableAdapter not found. Developers have missed a dependency. Please alert dev team ASAP.');
+        $this->bklogger->prettyLog($errorPhrase);
         throw new NotFoundException($errorPhrase);
-        return;
     }
     
     /**
-     * Deprecated by design from this override class... 
+     * Deprecated by design from this override class...
      * Throws an exception... was:
      * Destroys data in the temporary table by categoryId.
      * It also destroys the data in other maps that are dependencies used to construct the data.
@@ -108,8 +101,8 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
     private function destroyTableAdapter($categoryId)
     {
         $errorPhrase = new Phrase('Method destroyTableAdapter not found. Developers have missed a dependency. Please alert dev team ASAP.');
+        $this->bklogger->prettyLog($errorPhrase);
         throw new NotFoundException($errorPhrase);
-        return;
     }
 
     /**
@@ -117,9 +110,7 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
      */
     public function getData($categoryId, $key)
     {
-//      $this->generateTableAdapter($categoryId);
-// 		$this->generateData($categoryId);
-		$urlRewritesGetDataConnection = $this->connection->getConnection();
+        $urlRewritesGetDataConnection = $this->connection->getConnection();
         $select = $urlRewritesGetDataConnection->select()
             ->from(
                 ['e' => $this->connection->getTableName('url_rewrite')],
@@ -138,8 +129,7 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
                     ]
                 )
             );
-		$urlRewritesGetDataConnection->insert( $this->connection->getTableName( $this->mapTableName ), $select->getBind() );
-//         $urlRewritesGetDataConnection = $this->connection->getConnection();
+        $urlRewritesGetDataConnection->insert($this->connection->getTableName($this->mapTableName), $select->getBind());
         $select = $urlRewritesGetDataConnection->select()
             ->from(['e' => $this->connection->getTableName($this->mapTableName)])
             ->where('hash_key = ?', $key);
@@ -175,21 +165,11 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
                 )
             );
             
-        // $mapName = $this->temporaryTableService->createFromSelect(
-//             $select,
-//             $this->connection->getConnection(),
-//             [
-//                 'PRIMARY' => ['url_rewrite_id'],
-//                 'HASHKEY_ENTITY_STORE' => ['hash_key'],
-//                 'ENTITY_STORE' => ['entity_id', 'store_id']
-//             ]
-//         );
-			$tempRewriteBinding = $select->getBind();
-			$this->_bklogger->prettyLog('binding: ' . $tempRewriteBinding);
-			$urlRewritesGenerateDataConnection->insert( $this->connection->getTableName( $this->mapTableName ), $tempRewriteBinding );
-			
-//         return $mapName;
-			return;
+            $tempRewriteBinding = $select->getBind();
+            $this->bklogger->prettyLog('binding: ' . $tempRewriteBinding);
+            $urlRewritesGenerateDataConnection->insert($this->connection->getTableName($this->mapTableName), $tempRewriteBinding);
+            
+            return;
     }
 
     /**
@@ -199,6 +179,6 @@ class DataProductUrlRewriteDatabaseMap implements DatabaseMapInterface
     {
         $this->hashMapPool->resetMap(DataProductHashMap::class, $categoryId);
         $urlRewritesDestroyMapTableDataConnection = $this->connection->getConnection();
-		$urlRewritesDestroyMapTableDataConnection->query('TRUNCATE TABLE `' . $this->connection->getTableName( $this->mapTableName ) . '`' );
+        $urlRewritesDestroyMapTableDataConnection->query('TRUNCATE TABLE `' . $this->connection->getTableName($this->mapTableName) . '`');
     }
 }

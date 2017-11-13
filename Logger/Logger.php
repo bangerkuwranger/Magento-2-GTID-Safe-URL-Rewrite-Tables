@@ -14,10 +14,10 @@ namespace Bangerkuwranger\GtidSafeUrlRewriteTables\Logger;
 class Logger extends \Monolog\Logger
 {
 
-	public function prettyLog($message, $file)
+    public function prettyLog($message, $file)
     {
         if ($file) {
-            $fileName = BP. DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'log'. DIRECTORY_SEPARATOR.$file .'_Request.log';
+            $fileName = BP. DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'log'. DIRECTORY_SEPARATOR . $file .'_Request.log';
             $this->pushHandler(new \Monolog\Handler\StreamHandler($fileName));
         }
 
@@ -44,5 +44,4 @@ class Logger extends \Monolog\Logger
             $this->popHandler();
         }
     }
-
 }

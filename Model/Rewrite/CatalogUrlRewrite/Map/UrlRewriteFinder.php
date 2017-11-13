@@ -69,11 +69,11 @@ class UrlRewriteFinder
         DatabaseMapPool $databaseMapPool,
         UrlFinderInterface $urlFinder,
         UrlRewriteFactory $urlRewriteFactory,
-        array $urlRewriteClassNames = []
+        array $urlRewriteClassNames
     ) {
         $this->databaseMapPool = $databaseMapPool;
         $this->urlFinder = $urlFinder;
-        $this->urlRewriteClassNames = $urlRewriteClassNames;
+        $this->urlRewriteClassNames = ( !empty($urlRewriteClassNames) ) ? $urlRewriteClassNames : [];
         $this->urlRewritePrototype = $urlRewriteFactory->create();
     }
 

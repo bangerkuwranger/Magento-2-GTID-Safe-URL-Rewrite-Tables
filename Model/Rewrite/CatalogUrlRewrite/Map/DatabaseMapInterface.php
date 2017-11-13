@@ -34,21 +34,12 @@ interface DatabaseMapInterface
      */
     public function getData($categoryId, $key);
 
-    /**
-     * Destroys data in the temporary table by categoryId.
-     * It also destroys the data in other maps that are dependencies used to construct the data.
-     *
-     * @param int $categoryId
-     * @return void
-     */
-//     public function destroyTableAdapter($categoryId);
-
-	 /**
-     * Destroys data in the mapping table by categoryId.
-     * It also destroys the data in other maps that are dependencies used to construct the data.
-     *
-     * @param int $categoryId
-     * @return void
-     */
-	public function destroyMapTableData($categoryId);
+     /**
+      * Destroys data in the mapping table by categoryId.
+      * It also destroys the data in other maps that are dependencies used to construct the data.
+      *
+      * @param int $categoryId
+      * @return void
+      */
+    public function destroyMapTableData($categoryId);
 }
