@@ -14,6 +14,7 @@ namespace Bangerkuwranger\GtidSafeUrlRewriteTables\Setup;
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
+use Magento\Framework\DB\Ddl\Table;
 
 class InstallSchema implements InstallSchemaInterface
 {
@@ -23,13 +24,24 @@ class InstallSchema implements InstallSchemaInterface
 
         $installer->startSetup();
 
-        $table = $installer->getConnection()
+//set up table with foreign key set for transaction index... we'll then only drop rows from the transaction and drop transaction table.
+        $transactiontable = $installer->getConnection()
+        
+        ;
+        $keytable = $installer->getConnection()
             ->newTable($installer->getTable('Gtid_SafeUrl_Rewrite_Table'))
             ->addColumn(
                 'url_rewrite_id',
                 \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
                 null,
                 ['identity' => true, 'unsigned' => true, 'nullable' => false, 'primary' => true],
+                'URL Rewrite ID'
+            )
+            ->addColumn(
+                'gtidsafe_transaction_id',
+                \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                null,
+                ['identity' => true, 'nullable' => false, ],
                 'URL Rewrite ID'
             )
             ->addColumn(
@@ -65,7 +77,7 @@ class InstallSchema implements InstallSchemaInterface
                 ['url_rewrite_id']
             )
             ->setComment('Gtid SafeUrl Rewrite Table');
-        $installer->getConnection()->createTable($table);
+        $installer->getConnection()->createTable($keytable);
 
         $installer->endSetup();
     }

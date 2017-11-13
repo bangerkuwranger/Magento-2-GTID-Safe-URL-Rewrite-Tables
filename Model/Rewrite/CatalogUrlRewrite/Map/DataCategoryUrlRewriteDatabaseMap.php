@@ -138,6 +138,7 @@ class DataCategoryUrlRewriteDatabaseMap implements DatabaseMapInterface
             );
         $tempRewriteBinding = $select->getBind();
         $this->bklogger->prettyLog('binding: ' . $tempRewriteBinding);
+        //here's where we id the transaction and store to transaction table... return the ID and allow for the select to be processed back. Right now both product and category (this) models are falling back to the generic model method... which works, but there are no cached performance benefits leveraging mysql...
         $urlRewritesGenerateDataConnection->insert($this->connection->getTableName($this->mapTableName), $tempRewriteBinding);
         return;
     }
